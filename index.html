@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Data Visualisation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;700&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="">
+        <script src = "https://d3js.org/d3.v4.min.js"></script>
+    </head>
+    <body>
+        <style>
+            * {
+                box-sizing: border-box;
+                padding: 0 20px;
+            }
+            body {
+                background-color: white;
+                font-family: 'Overpass', sans-serif;
+            }
+        </style>
+
+        <h1>Line Chart with D3.js</h1>
+        <div class="chart"></div>
+
+        <script>
+            const dataset = [
+                  [ 14,    8 ],
+                  [ 51,   30 ],
+                  [ 71,   100 ],
+                  [ 99,   91 ],
+                  [ 120,   100 ],
+                  [ 153,   125 ],
+                  [ 176,   109 ],
+                  [ 220,    163 ],
+                  [ 258,    200 ],
+                  [ 280,   123 ],
+                  [ 308,    320 ],
+                  [ 373,   253 ],
+                  [ 408,    320 ],
+                  [ 450,   393 ],
+                ];
+
+            //to set the width and height of the svg
+            const width = 500;
+            const height = 300;
+            const padding = 40;
+
+            //to set the x scale
+            const xScale = d3.scaleLinear()
+                             .domain([0, d3.max(dataset, (item) => item[0])])
+                             .range([padding, width - padding]);
+            const xAxis = d3.axisBottom(xScale);
+
+            const yScale = d3.scaleLinear()
+                             .domain([0, d3.max(dataset, (item) => item[1])])
+                             .range([height - padding, padding]);
+            const yAxis = d3.axisLeft(yScale);
+
+            //appending svg tag to the 
+            const svg = d3.select(".chart")
+                          .append("svg")
+                          .attr("width", width)
+                          .attr("height", height)
+                          .style("background-color", "#f1f5f9")
+                          .style("border-radius", "10px")
+                          .style("border", "1px solid grey")
+            
+            svg.append("g")
+               .attr("transform", "translate(" + (- padding + 25) + "," + (height - padding) + ")")
+               .call(xAxis);
+            svg.append("g")
+               .attr("transform", "translate(" + (padding - 15) + ", 0)")
+               .call(yAxis);
+
+            svg.selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr("cx", (item) => xScale(item[0]))
+                .attr("cy",(item) => yScale(item[1]))
+                .attr("r", (item) => 3);
+
+           // Title
+            svg.append('text')
+                .attr('x', width/2 )
+                .attr('y', padding)
+                .attr('text-anchor', 'middle')
+                .style('font-family', 'Overpass')
+                .style('font-size', 20)
+                .text('Line Chart');
+
+
+            let line = d3.line()
+                .x((item) => xScale(item[0])) 
+                .y((item) => yScale(item[1])) 
+                //.curve(d3.curveMonotoneX)
+                
+            svg.append("path")
+                .datum(dataset) 
+                .attr("class", "line") 
+                .attr("d", line)
+                .style("fill", "none")
+                .style("stroke", "steelblue")
+                .style("stroke-width", "2");
+
+            /*svg.append("path")
+               .datum(data)
+               .attr("fill", "none")
+               .attr("stroke", "steelblue")
+               .attr("stroke-width", 1.5)
+               .attr("d", d3.line()
+                   .x(function(d) { return x(d[0]) })
+                   .y(function(d) { return y(d[1]) })
+                )*/
+
+           /* svg.selectAll("path")
+               .data(dataset)
+               .enter()
+               .append("path")
+               .attr("fill", "black")
+               .attr("stroke", "black")
+               .attr("stroke-width", 1.5)
+               .attr("d", d3.line()
+                    .x(item => xScale(item[0]))
+                    .y(item => yScale(item[1]))
+               )*/
+               
+
+
+        /*.attr("d", d3.line()
+        .x((item) => x(item[0]))
+                    .y((item) => y(item[1]))
+                )*/
+        </script>
+    </body>
+</html>

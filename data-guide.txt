@@ -1,0 +1,4 @@
+# I used a data array of chart data..
+# you can find a way to parse the .csv data to a more d3 friendly data type..
+# in the exact format as the mock data.
+# The chart will dynamically resize and reshape based on data recieved.

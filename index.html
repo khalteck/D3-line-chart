@@ -23,6 +23,10 @@
                 background-color: white;
                 font-family: 'Overpass', sans-serif;
             }
+            .point:hover {
+                fill:orangered;
+                cursor: pointer;
+            }
         </style>
 
         <h1>Line Chart with D3.js</h1>
@@ -64,7 +68,7 @@
 
             const xScale = d3.scaleTime()
                             .domain(d3.extent(DATA, xAccessor))
-                            .range([padding, width - padding]);
+                            .range([padding, width - 50]);
             const xAxis = d3.axisBottom(xScale);
 
             //to set the y scalex/axis
@@ -80,7 +84,7 @@
                           .attr("height", height)
                           .style("background-color", "#f1f5f9")
                           .style("border-radius", "10px")
-                          .style("border", "1px solid grey")
+                          .style("border", "1px solid lightgrey")
             
             //setting the x and y axis
             svg.append("g")
@@ -96,15 +100,18 @@
                 .append("circle")
                 .attr("cx", (item) => xScale(xAccessor(item)))
                 .attr("cy",(item) => yScale(item["todo"]))
-                .attr("r", (item) => 3);
+                .attr("r", (item) => 4)
+                .attr("class", "point")
+                .append("title")
+                .text((item) => `${item["todo"]}, ${item["date"]}`);
 
            // line chart title
             svg.append('text')
                 .attr('x', width/2 )
-                .attr('y', padding)
+                .attr('y', 25)
                 .attr('text-anchor', 'middle')
                 .style('font-family', 'Overpass')
-                .style('font-size', 20)
+                .style('font-size', 16)
                 .text('Line Chart');
 
 

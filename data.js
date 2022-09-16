@@ -12,7 +12,7 @@ let DATA = [
      "code": 4,
      "date": "2022-02-25",
      "text": 4,
-     "todo": 0,
+     "todo": 1,
      "total": 11
     },
     {
@@ -44,7 +44,7 @@ let DATA = [
      "code": 4,
      "date": "2022-04-05",
      "text": 5,
-     "todo": 2,
+     "todo": 1,
      "total": 12
     },
     {
@@ -68,7 +68,7 @@ let DATA = [
      "code": 5,
      "date": "2022-05-10",
      "text": 6,
-     "todo": 4,
+     "todo": 3.5,
      "total": 14
     },
     {

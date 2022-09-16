@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Doughnut</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;700&display=swap" rel="stylesheet"> 
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
+        <script src="data.js" ></script>
+    </head>
+<body>
+<script>
+//initialize margin start
+let margin = { top: 30, right: 120, bottom: 30, left: 50 },
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom,
+        tooltip = { width: 100, height: 100, x: 10, y: -30 };
+    //initialize margin end
+    let svg = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + width/2 + "," + height/2+ ")");
+    
+    let pie = d3.pie()
+    .sort(null)
+    .value(d => d.population);
+
+    let arc = d3.arc()
+    .innerRadius(0)
+    .outerRadius(Math.min(width, height) / 2 - 1);
+
+    let arcLabel = function(){
+        const radius = Math.min(width, height) / 2 * 0.8;
+        return d3.arc().innerRadius(radius).outerRadius(radius);
+    }
+    
+    d3.tsv("/data/population-data.tsv", function(error, data) {
+        if (error) throw error;
+         data.forEach(function(d) {
+             console.log(d);
+        //     d.date = parseDate(d.date);
+         });
+        let color = d3.scaleOrdinal()
+    .domain(data.map(d => d.age))
+    .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), data.length).reverse())
+    const arcs = pie(data);
+         svg.append("g")
+      .attr("stroke", "white")
+    .selectAll("path")
+    .data(arcs)
+    .enter().append("path")
+      .attr("fill", d => color(d.data.age))
+      .attr("d", arc)
+    .append("title")
+      .text(d => `${d.data.age}: ${d.data.population.toLocaleString()}`);
+
+    svg.append("g")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 12)
+      .attr("text-anchor", "middle")
+    .selectAll("text")
+    .data(arcs)
+    .enter().append("text")
+      .attr("transform", d => `translate(${arcLabel().centroid(d)})`)
+      .call(text => text.append("tspan")
+          .attr("y", "-0.4em")
+          .attr("font-weight", "bold")
+          .text(d => d.data.age))
+      .call(text => text.filter(d => (d.endAngle - d.startAngle) > 0.25).append("tspan")
+          .attr("x", 0)
+          .attr("y", "0.7em")
+          .attr("fill-opacity", 0.7)
+          .text(d => d.data.population.toLocaleString()));
+         
+    });
+</script>
+</body>
+</html>

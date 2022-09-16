@@ -11,6 +11,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;700&display=swap" rel="stylesheet"> 
         <link rel="stylesheet" href="">
         <script src = "https://d3js.org/d3.v4.min.js"></script>
+        <script src="data.js" ></script>
     </head>
     <body>
         <style>
@@ -28,7 +29,7 @@
         <div class="chart"></div>
 
         <script>
-            const dataset = [
+            /*const DATA = [
                   [ 14,    8 ],
                   [ 51,   30 ],
                   [ 71,   100 ],
@@ -43,7 +44,7 @@
                   [ 373,   253 ],
                   [ 408,    320 ],
                   [ 450,   393 ],
-                ];
+                ];*/
 
             //to set the width, height and padding of the svg
             const width = 500;
@@ -51,14 +52,24 @@
             const padding = 40;
 
             //to set the x scale/axis
-            const xScale = d3.scaleLinear()
-                             .domain([0, d3.max(dataset, (item) => item[0])])
-                             .range([padding, width - padding]);
+            
+            /*const parseDate = d3.timeParse("%Y-%m-%d"),
+                formatDate = d3.timeFormat("%b %d"),
+                formatMonth = d3.timeFormat("%b");*/
+
+            const dateParser = d3.timeParse("%Y-%m-%d"),
+                formatDate = d3.timeFormat("%b %d"),
+                formatMonth = d3.timeFormat("%b");
+            const xAccessor = (d) => dateParser(d["date"]);
+
+            const xScale = d3.scaleTime()
+                            .domain(d3.extent(DATA, xAccessor))
+                            .range([padding, width - padding]);
             const xAxis = d3.axisBottom(xScale);
 
             //to set the y scalex/axis
             const yScale = d3.scaleLinear()
-                             .domain([0, d3.max(dataset, (item) => item[1])])
+                             .domain([0, d3.max(DATA, (item) => item["todo"])])
                              .range([height - padding, padding]);
             const yAxis = d3.axisLeft(yScale);
 
@@ -80,11 +91,11 @@
                .call(yAxis);
 
             svg.selectAll("circle")
-                .data(dataset)
+                .data(DATA)
                 .enter()
                 .append("circle")
-                .attr("cx", (item) => xScale(item[0]))
-                .attr("cy",(item) => yScale(item[1]))
+                .attr("cx", (item) => xScale(xAccessor(item)))
+                .attr("cy",(item) => yScale(item["todo"]))
                 .attr("r", (item) => 3);
 
            // line chart title
@@ -98,13 +109,12 @@
 
 
             let line = d3.line()
-                .x((item) => xScale(item[0])) 
-                .y((item) => yScale(item[1])) 
+                .x((item) => xScale(xAccessor(item))) 
+                .y((item) => yScale(item["todo"])) 
                 //.curve(d3.curveMonotoneX)
                 
             svg.append("path")
-                .datum(dataset) 
-                .attr("class", "line") 
+                .datum(DATA)  
                 .attr("d", line)
                 .style("fill", "none")
                 .style("stroke", "steelblue")
@@ -121,22 +131,22 @@
                 )*/
 
            /* svg.selectAll("path")
-               .data(dataset)
+               .data(DATA)
                .enter()
                .append("path")
                .attr("fill", "black")
                .attr("stroke", "black")
                .attr("stroke-width", 1.5)
                .attr("d", d3.line()
-                    .x(item => xScale(item[0]))
-                    .y(item => yScale(item[1]))
+                    .x(item => xScale(xAccessor(item)))
+                    .y(item => yScale(item["todo"]))
                )*/
                
 
 
         /*.attr("d", d3.line()
-        .x((item) => x(item[0]))
-                    .y((item) => y(item[1]))
+        .x((item) => x(item["date"]))
+                    .y((item) => y(item["todo"]))
                 )*/
         </script>
     </body>

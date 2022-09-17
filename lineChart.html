@@ -9,19 +9,19 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;700&display=swap" rel="stylesheet"> 
-        <link rel="stylesheet" href="">
         <script src = "https://d3js.org/d3.v4.min.js"></script>
-        <script src="data.js" ></script>
     </head>
     <body>
         <style>
-            * {
-                box-sizing: border-box;
-                padding: 0 20px;
-            }
             body {
                 background-color: white;
                 font-family: 'Overpass', sans-serif;
+                width: 100vw;
+                display: flex;
+                justify-content: center;
+            }
+            h1 {
+                text-align: center;
             }
             .point:hover {
                 fill:orangered;
@@ -29,27 +29,13 @@
             }
         </style>
 
-        <h1>Line Chart with D3.js</h1>
-        <div class="chart"></div>
+        <div>
+            <h1>Line Chart with D3.js</h1>
+            <div class="chart"></div>
+        </div>
 
-        <script>
-            /*const DATA = [
-                  [ 14,    8 ],
-                  [ 51,   30 ],
-                  [ 71,   100 ],
-                  [ 99,   91 ],
-                  [ 120,   100 ],
-                  [ 153,   125 ],
-                  [ 176,   109 ],
-                  [ 220,    163 ],
-                  [ 258,    200 ],
-                  [ 280,   123 ],
-                  [ 308,    320 ],
-                  [ 373,   253 ],
-                  [ 408,    320 ],
-                  [ 450,   393 ],
-                ];*/
-
+        <script type="module">
+            import data from "./data.js";
             //to set the width, height and padding of the svg
             const width = 500;
             const height = 300;
@@ -63,13 +49,13 @@
             const xAccessor = (d) => dateParser(d["date"]);
 
             const xScale = d3.scaleTime()
-                            .domain(d3.extent(DATA, xAccessor))
+                            .domain(d3.extent(data, xAccessor))
                             .range([padding, width - 50]);
             const xAxis = d3.axisBottom(xScale);
 
             //to set the y scalex/axis
             const yScale = d3.scaleLinear()
-                             .domain([0, d3.max(DATA, (item) => item["todo"])])
+                             .domain([0, d3.max(data, (item) => item["total"])])
                              .range([height - padding, padding]);
             const yAxis = d3.axisLeft(yScale);
 
@@ -78,28 +64,28 @@
                           .append("svg")
                           .attr("width", width)
                           .attr("height", height)
-                          .style("background-color", "#f1f5f9")
+                          .style("background-color", "#ecfdf5")
                           .style("border-radius", "10px")
                           .style("border", "1px solid lightgrey")
             
             //setting the x and y axis
             svg.append("g")
-               .attr("transform", "translate(" + (- padding + 25) + "," + (height - padding) + ")")
+               .attr("transform", "translate(0," + (height - padding) + ")")
                .call(xAxis);
             svg.append("g")
-               .attr("transform", "translate(" + (padding - 15) + ", 0)")
+               .attr("transform", "translate(" + padding+ ", 0)")
                .call(yAxis);
 
             svg.selectAll("circle")
-                .data(DATA)
+                .data(data)
                 .enter()
                 .append("circle")
                 .attr("cx", (item) => xScale(xAccessor(item)))
-                .attr("cy",(item) => yScale(item["todo"]))
-                .attr("r", (item) => 4)
+                .attr("cy",(item) => yScale(item["total"]))
+                .attr("r", (item) => 3.5)
                 .attr("class", "point")
                 .append("title")
-                .text((item) => `${item["todo"]}, ${item["date"]}`);
+                .text((item) => `Article: ${item["article"]}, Code: ${item["code"]}, Text: ${item["text"]}`);
 
            // line chart title
             svg.append('text')
@@ -113,15 +99,16 @@
 
             let line = d3.line()
                 .x((item) => xScale(xAccessor(item))) 
-                .y((item) => yScale(item["todo"])) 
+                .y((item) => yScale(item["total"])) 
                 //.curve(d3.curveMonotoneX)
                 
             svg.append("path")
-                .datum(DATA)  
+                .datum(data)  
                 .attr("d", line)
                 .style("fill", "none")
-                .style("stroke", "steelblue")
-                .style("stroke-width", "2");
+                .style("stroke", "#059669")
+                .style("stroke-width", "2")
+                
 
             /*svg.append("path")
                .datum(data)
@@ -142,14 +129,14 @@
                .attr("stroke-width", 1.5)
                .attr("d", d3.line()
                     .x(item => xScale(xAccessor(item)))
-                    .y(item => yScale(item["todo"]))
+                    .y(item => yScale(item["total"]))
                )*/
                
 
 
         /*.attr("d", d3.line()
         .x((item) => x(item["date"]))
-                    .y((item) => y(item["todo"]))
+                    .y((item) => y(item["total"]))
                 )*/
         </script>
     </body>

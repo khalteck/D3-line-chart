@@ -36,6 +36,16 @@
 
         <script type="module">
             import data from "./data.js";
+            console.log(data)
+
+            //tried using fetch, getting undefined errors
+            /*var datum;
+            fetch('./data.json')
+            .then(res => res.json())
+            .then(jsondata => datum = jsondata)
+            .then(() => console.log(datum))*/
+
+            
             //to set the width, height and padding of the svg
             const width = 500;
             const height = 300;
@@ -49,7 +59,7 @@
             const xAccessor = (d) => dateParser(d["date"]);
 
             const xScale = d3.scaleTime()
-                            .domain(d3.extent(data, xAccessor))
+                            .domain(d3.extent(data  , xAccessor))
                             .range([padding, width - 50]);
             const xAxis = d3.axisBottom(xScale);
 

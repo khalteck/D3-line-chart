@@ -31,7 +31,15 @@
     </div>
     <script type="module">
         import data from "./data.js";
-        
+        console.log(data)
+
+        //tried using fetch, getting undefined errors
+        /*var datum;
+        fetch('./data.json')
+        .then(res => res.json())
+        .then(jsondata => datum = jsondata)
+        .then(() => console.log(datum))*/
+
         // set the dimensions and margins of the graph
         let width = 500;
         let height = 500;
@@ -60,7 +68,6 @@
         let pie = d3.pie()
         .value(function(d) {return d["total"]; })
         let data_ready = pie(data)
-        console.log(data_ready)
         // data_ready is an array of 17 objects
 
         // shape helper to build arcs:
